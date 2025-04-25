@@ -1,0 +1,60 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0d1521;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+a {
+    color: rgb(182, 182, 182);
+}
+
+.tri {
+    text-decoration: none;
+}
+
+.tri:hover {
+    text-decoration: underline;
+}
+
+form {
+    display: flex;
+    gap: 30px;
+   flex-direction: column;
+}
+
+input {
+    padding: 5px;
+}
+
+.create {
+    display: flex;
+    gap: 20px;
+}
+
+.write {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.flex {
+    display: flex;
+    gap: 20px;
+}
+
+a:hover {
+    color: antiquewhite;
+}
