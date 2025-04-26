@@ -11,11 +11,17 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    padding: 20px;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
 }
+
+.margin {
+    margin-top: 30rem;
+}
+
 
 a {
     color: rgb(182, 182, 182);
@@ -29,10 +35,19 @@ a {
     text-decoration: underline;
 }
 
-form {
+.form {
     display: flex;
     gap: 30px;
    flex-direction: column;
+   text-align: center;
+
+}
+
+.form1 {
+    display: flex;
+    gap: 30px;
+   flex-direction: row;
+   padding-bottom: 5rem;
 }
 
 input {
@@ -53,6 +68,7 @@ input {
 .flex {
     display: flex;
     gap: 20px;
+    margin-top: 5rem;
 }
 
 a:hover {

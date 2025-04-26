@@ -1,10 +1,10 @@
-<?php
-
+<?php 
 require_once("connexion.php");
 
 ///// EXEC
 
-if ($_POST) {
+// Création d'un livre
+if ($_POST && isset($_POST["create"])) {
     $title = $_POST["title"];
     $author = $_POST["author"];
     $date_publication = $_POST["date_publication"];
@@ -23,6 +23,7 @@ if ($_POST) {
     }
 }
 
+// Suppression d'un livre
 if(isset($_GET['action']) && $_GET['action'] == 'delete') {
     $idbook = $_GET['id_book'];
 
@@ -35,62 +36,58 @@ if(isset($_GET['action']) && $_GET['action'] == 'delete') {
     }
 }
 
+// Modification d'un livre (lorsqu'on clique sur "Modifier")
+if (isset($_GET['action']) && $_GET['action'] == 'modify' && isset($_GET['id_book'])) {
+    $idbook = $_GET['id_book'];
+    // Récupérer les informations du livre à modifier
+    $stmt = $pdo->prepare("SELECT * FROM book WHERE idbook = :idbook");
+    $stmt->execute(["idbook" => $idbook]);
+    $bookToModify = $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
-if (isset($_GET['action']) && $_GET['action'] == 'modify' && isset($book)) {
-    if ($_POST) {
-        // Récupère les nouvelles valeurs
-        $newTitle = $_POST['title'];
-        $newAuthor = $_POST['author'];
-        $newDate = $_POST['date_publication'];
+// Mise à jour du livre modifié
+if ($_POST && isset($_POST["update"])) {
+    $idbook = $_POST["idbook"];
+    $title = $_POST["title"];
+    $author = $_POST["author"];
+    $date_publication = $_POST["date_publication"];
 
-        // Assurez-vous que vous avez une requête préparée pour éviter les injections SQL
+    try {
         $stmt = $pdo->prepare("UPDATE book SET title = :title, author = :author, date_publication = :date_publication WHERE idbook = :idbook");
-        
-        // Exécution de la mise à jour en passant les valeurs
         $stmt->execute([
-            'title' => $newTitle,
-            'author' => $newAuthor,
-            'date_publication' => $newDate,
-            'idbook' => $book['idbook']  // Identifie le livre à mettre à jour
+            "idbook" => $idbook,
+            "title" => $title,
+            "author" => $author,
+            "date_publication" => $date_publication
         ]);
-        
-        // Optionnel: Message de confirmation ou redirection
-        echo "Livre mis à jour avec succès!";
+        // Afficher un message pour confirmer la mise à jour
+        echo '<p class="margin">Le livre a bien été modifié !</p>';
+    } catch (PDOException $e) {
+        echo $e->getMessage();
     }
-    }
+}
 
-
-// trier par date
-
+// Trier les livres
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
         case 'trier':
-            // Trier par titre (ordre croissant)
             $stmt = $pdo->query("SELECT * FROM book ORDER BY title ASC");
             break;
-
         case 'date':
-            // Trier par date de publication (ordre décroissant)
             $stmt = $pdo->query("SELECT * FROM book ORDER BY date_publication DESC");
             break;
-
         case 'default':
-            // Si aucune action, afficher tous les livres
             $stmt = $pdo->query("SELECT * FROM book");
             break;
-
         default:
-            // Si aucune des actions ci-dessus, afficher tous les livres
             $stmt = $pdo->query("SELECT * FROM book");
             break;
     }
 } else {
-    // Par défaut, afficher tous les livres
     $stmt = $pdo->query("SELECT * FROM book");
 }
 
 $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
 <!DOCTYPE html>
@@ -109,64 +106,86 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <a href="login.php">Connexion</a>
 </div>
 
-    <h1>Mes livres en BDD</h1>
+<h1 >Mes livres en BDD</h1>
 
-    <table border="1">
-        <thead>
-            <th>Titre</th>
-            <th>Auteur</th>
-            <th>Date</th>
-            <th>Supprimer</th>
-            <th>Modifier</th>
-        </thead>
+<table border="1">
+    <thead>
+        <th>Titre</th>
+        <th>Auteur</th>
+        <th>Date</th>
+        <th>Supprimer</th>
+        <th>Modifier</th>
+    </thead>
+    <tbody>
+        <?php
+        foreach ($books as $book) {
+            echo "<tr>";
+            echo "<td>" . $book["title"] . "</td>";
+            echo "<td>" . $book["author"] . "</td>";
+            echo "<td>" . $book["date_publication"] . "</td>";
+            echo "<td><a href='?id_book=" . $book["idbook"] . "&action=delete'>Supprimer</a></td>";
+            echo "<td><a href='?id_book=" . $book["idbook"] . "&action=modify'>Modifier</a></td>";
+            echo "</tr>";
+        }
+        ?>
+    </tbody>
+</table>
 
-        <tbody>
-            <?php
-            foreach ($books as $book) {
-                echo "<tr>";
-                echo "<td>" . $book["title"] . "</td>";
-                echo "<td>" . $book["author"] . "</td>";
-                echo "<td>" . $book["date_publication"] . "</td>";
-                echo "<td> <a href='?id_book=". $book["idbook"] . "&action=delete'> Supprimer </a> </td>";
-                echo "<td> <a href='?id_book=". $book["idbook"] . "&action=modify'> Modifier </a> </td>";
-                echo "</tr>";
-            }
-            ?>
-        </tbody>
-    </table>
-
-    <br>
-    <br>
-    <form method="POST">
-        <div class="create">
-            <div class="write">
-                <label for="title">Titre:</label>
-                <input type="text" name="title" id="title" placeholder="Titre">
-            </div>
-            
-            <div class="write">
-                <label for="author">Auteur:</label>
-                <input type="text" name="author" id="author" placeholder="Auteur">
-            </div>
-
-            <div class="write">
-                <label for="date_publication">Date:</label>
-                <input type="date" name="date_publication" id="date_publication">
-            </div>
-            
-            <input type="submit" value="Créer livre">
-
+<!-- Formulaire de création -->
+<br><br>
+<form class="form" method="POST">
+<h2>Crée un livre</h2>
+    <div class="create">
+    
+        <div class="write">
+            <label for="title">Titre:</label>
+            <input type="text" name="title" id="title" placeholder="Titre">
         </div>
         
-        <div class="trier">
-            <a class="tri" href="?action=trier">Trier par titre</a> |
-            <a class="tri" href="?action=date">Trier par date</a> |
-            <a class="tri" href="?action=default">Par defaut</a>
+        <div class="write">
+            <label for="author">Auteur:</label>
+            <input type="text" name="author" id="author" placeholder="Auteur">
         </div>
-    </form>
 
+        <div class="write">
+            <label for="date_publication">Date:</label>
+            <input type="date" name="date_publication" id="date_publication">
+        </div>
+        
+        <input type="submit" name="create" value="Créer livre">
+    </div>
     
+    <div class="trier">
+        <a class="tri" href="?action=trier">Trier par titre</a> |
+        <a class="tri" href="?action=date">Trier par date</a> |
+        <a class="tri" href="?action=default">Par défaut</a>
+    </div>
+</form>
+
+<!-- Formulaire de modification si on est en mode "modify" -->
+<?php if (isset($bookToModify)): ?>
+    <h2>Modifier le livre</h2>
+    <form class="form1" method="POST">
+        <input type="hidden" name="idbook" value="<?php echo $bookToModify['idbook']; ?>">
+
+        <div class="write">
+            <label for="title">Titre:</label>
+            <input type="text" name="title" id="title" value="<?php echo $bookToModify['title']; ?>" placeholder="Titre">
+        </div>
+
+        <div class="write">
+            <label for="author">Auteur:</label>
+            <input type="text" name="author" id="author" value="<?php echo $bookToModify['author']; ?>" placeholder="Auteur">
+        </div>
+
+        <div class="write">
+            <label for="date_publication">Date:</label>
+            <input type="date" name="date_publication" id="date_publication" value="<?php echo $bookToModify['date_publication']; ?>">
+        </div>
+        
+        <input type="submit" name="update" value="Enregistrer les modifications">
+    </form>
+<?php endif; ?>
 
 </body>
-
 </html>
