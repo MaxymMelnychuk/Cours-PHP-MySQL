@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <input type="email" id="email" name="email" required><br><br>
         </div>
 
-        <button onclick="accepting()" type="submit">Login</button>
+        <button onclick="accepting()" type="submit">Sign up</button>
 
         <div class="register_form">
             <p>Already have account ?</p>
