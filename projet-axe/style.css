@@ -80,11 +80,11 @@ a:hover {
     position: relative;
 }
 
-.hidden, .hidden2 {
+.hidden, .hidden2, .hidden3 {
     display: none;
 }
 
-.pop-up, .pop-up2 {
+.pop-up, .pop-up2, .pop-up3 {
     position:fixed;
     display: flex;
     justify-content: center;

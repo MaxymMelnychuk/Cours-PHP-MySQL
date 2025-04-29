@@ -124,7 +124,7 @@ $cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <a href="../exercices/index.php">Livres</a>
 <a href="../exercices/inscription.php">S'inscrire</a>
 </div>
-
+<h1>Pokemons en BDD</h1>
 <?php
 
 ?>
@@ -138,6 +138,7 @@ $cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>Supprimer</th>
         <th>Modifier</th>
     </thead>
+    <!-- echo "<td><a  href='?idcard=" . $card["idcard"] . "&action=delete'>Supprimer</a></td>"; -->
     <tbody>
         <?php
         foreach ($cards as $card) {
@@ -146,11 +147,24 @@ $cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo "<td>" . $card["atk"] . "</td>";
             echo "<td>" . $card["def"] . "</td>";
             echo "<td>" . $card["description"] . "</td>";
-            echo "<td><a href='?idcard=" . $card["idcard"] . "&action=delete'>Supprimer</a></td>";
+            echo "<td><a class='validation3' data-id='" . $card["idcard"] . "'>Supprimer</a></td>";
             echo "<td><a href='?idcard=" . $card["idcard"] . "&action=modify'>Modifier</a></td>";
             echo "</tr>";
+        
+            
+            echo "
+    <div class='hidden3' id='popup-" . $card["idcard"] . "'>
+        <div class='confirm'>Supprimer ce Pokémon ?
+            <div class='buttons'>
+                <a class='green' href='?idcard=" . $card["idcard"] . "&action=delete'>Oui</a>
+                <button class='red validation3' data-id='" . $card["idcard"] . "'>Non</button>
+            </div>
+        </div>
+    </div>
+    ";
         }
         ?>
+        
     </tbody>
 </table>
 
