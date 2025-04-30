@@ -3,22 +3,23 @@
 require_once("connexion.php");
 
 
-
+// Validation du nom d'utilisateur
 function username($username) {
+    // Vérifie si le nom d'utilisateur contient au moins 4 caractères
     if (strlen($username) > 4) {
         // echo '<p style="color: green;">Username good</p>';
         return true;
-
     } else {
         echo '<p style="color: red;">Username doit contenir au moins 4 caractere</p>';
         return false;
     }
 }
 
-
+// Validation du mot de passe
 function logIn($password, $passwordRepeat) {
-    
+    // Vérifie si le mot de passe respecte les critères de sécurité
     if (strlen($password) > 8 && preg_match('/[a-zA-Z0-9!@#$%^&*()_+={}\[\]:;,.<>?]/', $password)) {
+        // Vérifie si les deux mots de passe correspondent
         if ($password == $passwordRepeat) {
             // echo '<p style="color: green;">Mot de passe correct</p>';
             return true;
@@ -27,18 +28,15 @@ function logIn($password, $passwordRepeat) {
             echo '<p style="color: red;">Les mot de passes ne rassemblent pas</p>';
             return false;
         }
-            
     } else {
         echo '<p style="color: red;">Mot de passe doit contenir au moins 8 caracteres, 1 minuscule, majuscule, et caractere special</p>';
         return false;
-        
     }
-
-   
 }
 
+// Validation finale et inscription
 function accepting($username, $password, $passwordRepeat, $pdo) {
-    
+    // Vérification des validations
     $isUsernameValid = username($username);        
     $isPasswordValid = logIn($password, $passwordRepeat); 
     
@@ -46,13 +44,13 @@ function accepting($username, $password, $passwordRepeat, $pdo) {
         echo '<p style="color: green;">Formulaire envoyée</p>';
 
         if($_POST){
-
+            // Récupération des données du formulaire
             $email = $_POST["email"];
             $password = $_POST["password"];
             $username = $_POST["username"];
         
+            // Préparation et exécution de la requête d'insertion
             $sql = "INSERT INTO user (email, password, username) VALUES(:email, :password, :username)";
-        
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 'email' => $email,
@@ -61,14 +59,7 @@ function accepting($username, $password, $passwordRepeat, $pdo) {
             ]);
         
             echo "Votre user a été cocrrectement inséré en BDD";
-        
         }
-        
-        
-        
-        
-        
-       
     } else {
         // echo '<p style="color: red;">NOOOO</p>';
         return false;
@@ -129,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <label for="email">Email :</label><br>
             <input type="email" id="email" name="email" required><br><br>
         </div>
-
+        <!-- au click, s'execute la fonction accepting -->
         <button onclick="accepting()" type="submit">Sign up</button>
 
         <div class="register_form">

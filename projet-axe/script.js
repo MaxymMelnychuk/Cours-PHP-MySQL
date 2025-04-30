@@ -1,12 +1,12 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {    // s'execute si tout est bien charger
     const validation = document.querySelectorAll('.validation');  
     const validation2 = document.querySelectorAll('.validation2'); 
     const hidden = document.querySelectorAll('.hidden');          
-    const hidden2 = document.querySelectorAll('.hidden2');        
+    const hidden2 = document.querySelectorAll('.hidden2');        //je selectionne avec ce que je vais travailler
     const validation3 = document.querySelectorAll('.validation3'); 
-    const hidden3 = document.querySelectorAll('.hidden3');        
+   
 
-    
+    // a chaque fois quand on click sur enregister, il va afficher une pop-up de confirmation
     validation.forEach(val => {
         val.addEventListener('click', () => {
             hidden.forEach(hid => {
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    
+     // pareil que 1er
     validation2.forEach(val => {
         val.addEventListener('click', () => {
             hidden2.forEach(hid => {
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    
+     // a chaque lien quand on click sur supprimer, il va afficher une pop-up de confirmation
     validation3.forEach(val => {
         val.addEventListener('click', (e) => {
             const id = e.target.getAttribute('data-id');

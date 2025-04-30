@@ -1,5 +1,5 @@
 <?php
-
+//connexion au base de donnée library
 $host = 'localhost';
 $dbname = 'library';
 $username = 'root';
@@ -13,6 +13,6 @@ try {
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 } 
-
+// commencer la session
 session_start();
 

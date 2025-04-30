@@ -25,6 +25,7 @@ body {
 
 a {
     color: rgb(182, 182, 182);
+    cursor: pointer;
 }
 
 .tri {
@@ -123,6 +124,8 @@ button {
     border: solid 1px green;
     color: white;
     cursor: pointer;
+    padding: 4px 8px;
+    text-decoration: none;
     
 }
 

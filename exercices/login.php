@@ -1,30 +1,23 @@
 <?php
 require_once("connexion.php");
 
-///// LOGIN.PHP
 
-if(isset($_SESSION["iduser"])) {
-    header("location:profil.php");
-}
 
+
+// quand on va clicker sur login, il va chercher si user existe dans la base donéee
 if ($_POST) {
-
+    // Récupération et nettoyage des données du formulaire
     $email = $_POST["email"];
     $password = trim($_POST["password"]);
 
     if ($email && $password) {
-
-        // si j'ai un post
-        // je récupère email et password
-        // je récupère les infos du user en bdd pour cet email
-        // SELCT ... WHERE email =...
-        // je variabilise avec un fetch
+        // Recherche de l'utilisateur dans la base de données
         $stmt = $pdo->query("SELECT * FROM user WHERE email = '$email' ");
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // je vérifie si le mot de passer de mon form et celui en bdd sont les même
-        // password_verify
+        // Vérification du mot de passe avec password_verify
         if ($user && password_verify($password, $user["password"])) {
+            // Création de la session utilisateur
             $_SESSION["iduser"] = $user["iduser"];
             $_SESSION["email"] = $user["email"];
             $_SESSION["username"] = $user["username"];
@@ -33,14 +26,11 @@ if ($_POST) {
             echo "La connexion a échoué !";
         }
 
-        // si c'est le cas
-        // j'alimente ma session avec l'id, l'email en sesssion
-
-        // message de confirmation : vous êtes connecté avec l'identifiant : email@mail.com
-
-
+        // Redirection si l'utilisateur est déjà connecté
+        if(isset($_SESSION["iduser"])) {
+            header("location:profil.php");
+        }
     }
-
 }
 
 

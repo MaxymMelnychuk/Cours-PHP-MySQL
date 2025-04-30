@@ -1,29 +1,22 @@
 <?php
 
-///// PROFILE.PHP
+
 require_once("connexion.php");
+//on ce connecte avec BDD
 
-
+// si trouve pas iduser, il redirige vers le login
 if(!isset($_SESSION["iduser"])) {
     header("location:login.php");
 }
 
-// Déconnexion
-if (isset($_GET["action"]) && $_GET["action"] == "deconnexion") {
-    session_unset();
-    session_destroy();
-    header("location:login.php");
-    exit;
-}
 
-
-
+// je vide ma session
 if(isset($_GET["action"]) && $_GET["action"] == "deconnexion") {
-    // je vide ma session
+    
     unset($_SESSION["iduser"]);
     unset($_SESSION["email"]);
     unset($_SESSION["username"]);
-    header("location:login.php"); // redirection sans paramètre
+    header("location:login.php"); 
 }
 
 

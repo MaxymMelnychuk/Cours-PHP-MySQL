@@ -1,16 +1,16 @@
 <?php 
 require_once("connexion.php");
 
-///// EXEC
 
-// Création d'un livre
+
+// Création d'un livre au click
 if ($_POST && isset($_POST["create"])) {
     $title = $_POST["title"];
     $author = $_POST["author"];
     $date_publication = $_POST["date_publication"];
     $availability = $_POST["availability"];
 
-    try {
+    try { //inserer dans la BDD ce qu'on avait mit dans input
         $stmt = $pdo->prepare("INSERT INTO book (title, author, date_publication, availability) 
         VALUES( :title, :author, :date_publication, :availability)");
 
@@ -25,11 +25,11 @@ if ($_POST && isset($_POST["create"])) {
     }
 }
 
-// Suppression d'un livre
+// Suppression d'un livre au click
 if(isset($_GET['action']) && $_GET['action'] == 'delete') {
     $idbook = $_GET['id_book'];
 
-    try {
+    try { //suppresion de la BDD
         $stmt = $pdo->prepare("DELETE FROM book WHERE idbook = :idbook");
         $stmt->execute(["idbook" => $idbook]);
         echo "Le livre a bien été supprimé !";
@@ -69,6 +69,7 @@ if (isset($_GET['action'])) {
     $stmt = $pdo->query("SELECT * FROM book");
 }
 
+//recuper les livres
 $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -100,7 +101,7 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>Supprimer</th>
     </thead>
     <tbody>
-        <?php
+        <?php //pour chaque livre je vais afficher titre, auteur, etc. et action, soit supprimer soit modifier
         foreach ($books as $book) {
             echo "<tr>";
             echo "<td>" . $book["title"] . "</td>";
@@ -114,12 +115,12 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </tbody>
 </table>
 
-<!-- Formulaire de création -->
+<!-- form pour crée un livre -->
 <br><br>
 <form class="form" method="POST">
 <h2>Crée un livre</h2>
     <div class="create">
-    
+        
         <div class="write">
             <label for="title">Titre:</label>
             <input type="text" name="title" id="title" placeholder="Titre">
@@ -142,7 +143,7 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         <input type="submit" name="create" value="Créer livre">
     </div>
-    
+    <!-- trier des livres -->
     <div class="trier">
         <a class="tri" href="?action=title">Trier par titre</a> |
         <a class="tri" href="?action=date">Trier par date</a> |

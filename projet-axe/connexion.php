@@ -1,5 +1,5 @@
 <?php
-
+//connexion au pokebox BDD
 $host = 'localhost';
 $dbname = 'pokebox';
 $username = 'root';
@@ -13,5 +13,5 @@ try {
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 } 
-
+//commence la session
 session_start();

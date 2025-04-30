@@ -1,11 +1,6 @@
 <?php 
 require_once("connexion.php");
-
-///// EXEC
-
-
-
-
+//on se connecte avec base de donnée
 
 
 
@@ -44,24 +39,24 @@ if(isset($_GET['action']) && $_GET['action'] == 'delete') {
     }
 }
 
-// Modification d'un livre (lorsqu'on clique sur "Modifier")
+// modifie un livre quand on click sur modifier
 if (isset($_GET['action']) && $_GET['action'] == 'modify' && isset($_GET['idcard'])) {
     $idcard = $_GET['idcard'];
-    // Récupérer les informations du livre à modifier
+    // je recupere les donnée du livre quel je vais modifier
     $stmt = $pdo->prepare("SELECT * FROM cards WHERE idcard = :idcard");
     $stmt->execute(["idcard" => $idcard]);
     $pokemonToModify = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Mise à jour du livre modifié
-if ($_POST && isset($_POST["update"])) {
+// mide a jour du livre quel j'ai modifier
+if ($_POST && isset($_POST["update"])) { //recuperation des donner du formulaire
     $idcard = $_POST["idcard"];
     $name = $_POST["name"];
     $atk = $_POST["atk"];
     $def = $_POST["def"];
     $description = $_POST["description"];
 
-    try {
+    try { 
         $stmt = $pdo->prepare("UPDATE cards SET name = :name, atk = :atk, def = :def, description = :description WHERE idcard = :idcard");
         $stmt->execute([
             "idcard" => $idcard,
@@ -70,7 +65,7 @@ if ($_POST && isset($_POST["update"])) {
             "def" => $def,
             "description" => $description,
         ]);
-        // Afficher un message pour confirmer la mise à jour
+        // il afficher un message pour confirmer la mise à jour
         echo '<p class="margin">Le pokemon a bien été modifié !</p>';
     } catch (PDOException $e) {
         echo $e->getMessage();
@@ -80,7 +75,7 @@ if ($_POST && isset($_POST["update"])) {
 
 
 
-// Trier les livres
+// trier les pokemons
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
         case 'name':
@@ -151,9 +146,9 @@ $cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo "<td><a href='?idcard=" . $card["idcard"] . "&action=modify'>Modifier</a></td>";
             echo "</tr>";
         
-            
+            // affiche un pup-up de confirmation quand je click sur supprimer
             echo "
-    <div class='hidden3' id='popup-" . $card["idcard"] . "'>
+    <div class='hidden3' id='popup-" . $card["idcard"] . "'> 
         <div class='confirm'>Supprimer ce Pokémon ?
             <div class='buttons'>
                 <a class='green' href='?idcard=" . $card["idcard"] . "&action=delete'>Oui</a>
@@ -168,7 +163,7 @@ $cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </tbody>
 </table>
 
-<!-- Formulaire de création -->
+<!-- form de creation -->
 <br><br>
 <form class="form" method="POST">
 
@@ -208,7 +203,7 @@ $cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
        
     </div>
-    
+    <!-- trier les pokemons -->
     <div class="trier">
         <a class="tri" href="?action=name">Trier par name</a> |
         <a class="tri" href="?action=atk">Trier par atk</a> |
@@ -222,7 +217,7 @@ $cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-<!-- Formulaire de modification si on est en mode "modify" -->
+<!-- recupere la donée du pokemon quel je veut modifier et le met dans input -->
 <?php if (isset($pokemonToModify)): ?>
     <h2>Modifier un pokemon</h2>
     <form class="form1 " method="POST">
